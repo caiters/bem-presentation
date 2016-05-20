@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+  <!--
+
+  Topics to cover:
+
+  INTRODUCTION
+  ===
+
+  CSS = cascading style sheets
+  Stylesheets = style your website. the CSS tells the browser what to make things look like - whether something has black text or grey, where to position it, etc.
+  Cascading = how stylesheets work.
+
+    When more than one stylesheet rule can apply to a particular element in the html, the cascade determines which style is going to win.
+    Two things help determine what something is going to look like.
+      One is specificity (more on that in a second), which is a measurement of how specific the style rule is.
+      The other is where it lives in the sheet. Given two rules that have an equal specificity, the one further down the css file will override the one that is higher.
+
+      css specificity - https://stuffandnonsense.co.uk/archives/images/specificitywars-05v2.jpg
+
+    p { color: red; }
+    div { color: blue; }
+    p { color: green; }
+
+    <p>This text will be green.</p>
+
+
+  Long selectors and use of !important can get you into trouble.
+    For example, you're working on a pet website and maybe there's some heavy selector: #cat.tabby.cat.pet .body .belly p.fur { color: white; }
+    Later on in your project, you need to change ALL pets to have black fur.
+      The easiest way to do it might be to say .pet .fur { color: black; }
+      ... but that won't work in this case. The other selector is too strong. The rest of the fur might be black, but on their belly it would still be white.
+      You might then choose to override it by saying .pet .fur { color: black !important; }
+    But then later... you need to work on another section of the site, and black fur won't work there, because the background is black.
+      The only way to override the above selector is to make another important selector and either make it more specific, or put it lower in the css file. Over time your css will become harder and harder to maintain.
+
+    This is also why inline styles are bad. Inline styles have extremely high specificity. They can only be overridden by !important tags.
+
+    So how do we fix the problem of overly-specific css? It's very easy to fall into the hole of having too many selectors, especially when using less or sass.
+    .wrapper {
+      .main {
+        .diagram {
+          .caption {
+            color: red;
+          }
+        }
+      }
+    }
+    turns into .wrapper .main .diagram .caption { color: red; }  = [[ 0, 4, 0 ]]
+    but really, you could probably also just do .diagram .caption { color: red; }  = [[ 0, 2, 0 ]]
+    or even .diagram-caption { color: red; } = [[ 0, 1, 0 ]]
+
+    Following the BEM methodology can help prevent you from being affected by these pitfalls.
+
+    Okay let's finally talk about BEM.
+    ===
+
+  So what is BEM?
+  Block - Element - Modifier
+
+  Block-
+  - a standalone entity that is meaningful on its own.
+    - e.g. header, container, menu, input
+
+  Element-
+  - Parts of a block that have no standalone meaning. They are intrinsically tied to the block in which they reside.
+    - e.g. menu item, list item
+
+  Modifier
+  - Flags on blocks or elements. They change appearance or behavior.
+    - e.g. disabled, checked, selected
+
+  Why use it?
+  - it's modular.
+    - you won't get problems from cascading because your blocks generally do not rely on other elements on the page.
+    - you can more easily move css from one project to another!
+  - reusable
+    - you should run into less instances of repeated code because you can easily reuse the same styles in multiple places.
+  - structure
+    - with BEM naming, you can understand some things about the html code without even seeing the html code e.g. you will always know that menu__item is an item that lives inside a menu.
+    - because of this, you are allowed greater confidence in making css changes. It's common to never delete CSS because you have no idea what items might be using that class and whether you are going to break some obscure part of your site. With BEM naming, you should be able to delete or rename CSS with higher levels of confidence.
+
+
+    So how does it work?
+    - Let's say you have an element that will be living on the homepage with links to news articles, videos, etc. Let's name it .news-showcase
+
+    <ul class="news-showcase">
+      ...
+    </ul>
+
+    Now let's add some showcase items.
+
+    <ul class="news-showcase">
+      <li>
+        ...
+      </li>
+      <li>
+        ...
+      </li>
+      <li>
+        ...
+      </li>
+    </ul>
+
+    We _could_ style this by just doing css like so:
+      .news-showcase li { }
+    ... but this assumes that it will always be an li, which is not necessarily the case. .news-showcase doesn't have to be a ul (unordered list).
+    ... this also has higher specificity. if we EVER want to override any of the styles, we will have to either repeat the full rule and have it lower on the page, or add more specificity.
+
+    So what would be better? Let's use BEM.
+    .news-showcase__item { }  // you can tell just by looking at this that it is a child of news-showcase. You don't even need to see the HTML to know that.
+
+    <ul class="news-showcase">
+      <li class="news-showcase__item">
+        ...
+      </li>
+      <li class="news-showcase__item">
+        ...
+      </li>
+      <li class="news-showcase__item">
+        ...
+      </li>
+    </ul>
+
+    Okay let's add some more. I'm going to reduce this to a single LI for simplicity.
+
+    <ul class="news-showcase">
+      <li class="news-showcase__item">
+        <h3>Lorem ipsum</h3>
+        <a href="#">Dolor Sit Amet</a>
+      </li>
+    </ul>
+
+    The old way you might have done:
+    .news-showcase h3, or possibly even .news-showcase li h3.
+    Why don't you want to do that? Well, what if later you want to reuse this element somewhere else, but h3 doesn't make sense anymore? What if it's an h2 instead?
+    Styling headings (h1, h2, h3, h4, h5, h6) can often bite you later because we just aren't consistent with how headings are displayed across a website. That isn't a bad thing, it's just a fact. Different sections may require different styles for the same level of heading.
+
+    So let's BEM this.
+    <ul class="news-showcase">
+      <li class="news-showcase__item">
+        <h3 class="news-showcase__heading">Lorem ipsum</h3>
+        <a href="#" class="btn">Dolor Sit Amet</a>
+      </li>
+    </ul>
+
+    Note that the heading is NOT news-showcase__item__heading. We still just consider it a child of news-showcase. It's pretty unlikely that we'd need to style the heading of news-showcase__item from news-showcase. This helps prevent BEM classes from getting way too long, and also keeps them reuseable.
+    Also notice that it is NOT news-showcase__btn. Button styles are often reuseable across a whole website, so it wouldn't make sense to specifically name this as a child of news-showcase. It's merely a button, a fully standalone "block" element, that happens to live inside news-showcase.
+      - Why isn't __heading the same? Again, headings are more difficult to blanket style across a whole site. The styles we're using for the heading are specific to this section and not likely to be reused elsewhere.
+
+    Okay, nearly done. What if we want this button to be special somehow? What if all the other buttons are transparent with a border around them, but we want this one to be a solid color?
+
+    <a href="#" class="btn btn--solid">Dolor Sit Amet</a>
+
+    .btn { border: 1px solid #000; color: #000; background: transparent; padding: 10px 20px; font-size: 18px; display: inline-block; }
+    .btn--solid { border: none; background: #fff; }
+
+    We can add a modifier class, btn--solid. It's still a .btn, but has a modifier of .btn--solid. It will inherit all of the styles of .btn, and then will override with any styles included in .btn--solid.
+    So it will override the border and background color, but will inherit the text color, padding, font size, and display attribute.
+
+
+    POTENTIAL PITFALLS
+    Modifiers are great - just make sure you aren't including things as the default style that don't need to be. For example, if you find yourself constantly overriding the border style on a button, maybe the border should not be a default. You could remove that from .btn and then have btn--has-border.
+    When naming new styles, try to think about what a block is. If the item you are styling can be standalone and doesn't rely on its container, don't name it like an element.
+
+
+
+  REFERENCES:
+  http://getbem.com/introduction/
+  -->
+  <script src="/js/reveal.js"></script>
+</body>
+</html>
