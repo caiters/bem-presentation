@@ -57,99 +57,142 @@
         <section>
           <h2>Trouble in (CSS) Paradise</h2>
         </section>
-
-        <section>
-          <h3>Long nested selectors</h3>
-          <pre>
-            <code data-trim>
-              #cat.tabby.cat.pet .body .belly p.fur { color: white; }
-            </code>
-          </pre>
-          <p>... but now we want all pets to have black fur all over.</p>
-          <pre class="fragment">
-            <code data-trim>
-              <p>.pet .fur { color: black; }</p>
-            </code>
-          </pre>
-          <aside class="notes">
-            <p>For example, you're working on a pet website and maybe there's some heavy selector.</p>
-            <p>Later on in your project, you need to change ALL pets to have black fur.</p>
-          </aside>
-        </section>
         <section>
           <h3>!important</h3>
           <div>
-            <code>#cat.tabby.cat.pet .body .belly p.fur { color: white; }</code>
+            <pre><code>#creature.equine.unicorn .body mane hair { color: blue; }</code></pre>
           </div>
+          <div class="fragment">
+            Red hair for all? OK:
+            <pre><code>#creature hair { color: red !important; }</code></pre>
+          </div>
+          <div class="fragment">
+            Oh, but horses need green hair:
+            <pre><code>#creature.horse hair { color: green !important; }</code></pre>
+          </div>
+          <div class="fragment">
+            ... and so on.
+          </div>
+          <aside class="notes">
+            <p>It can be tempting to override a complex selector with !important. !important will override pretty much anything. The problem is a single !important may lead to others.</p>
+            <ol>
+              <li>There's a complex selector. Your boss says "Hey, animals all need red hair." So you just use !important. Nice and easy, done!</li>
+              <li>A week later the client says "We love the red hair, but horses need green hair." You have to raise the specificity in order to override that !important.</li>
+              <li>What if later on, horses of a certain breed need black hair? And so on, and so forth. A single !important breeds more down the line.</li>
+            </ol>
+          </aside>
         </section>
-          <!--<ul>
-            <li class="fragment">Long, nested selectors</li>
-            <li class="fragment">!important</li>
-            <li class="fragment">Inline styles, e.g.:<br/>
-              style="color: red;"
-            </li>
-          </ul>-->
+        <section>
+          <h3>Long nested selectors</h3>
 
+          <div class="clearfix group">
+            <div style="width: 60%; float: left; ">
+              <p><strong>HTML</strong></p>
+              <pre style="width: 95%; margin:0;"><code data-trim>
+<creature id="horse" class="horse equine">
+  <mane></mane>
+</creature>
+
+<creature id="unicorn" class="unicorn equine">
+  <mane></mane>
+</creature>
+                </code></pre>
+            </div>
+            <div style="width: 40%; float: left;">
+              <p><strong>CSS</strong></p>
+              <pre style="width: 95%;"><code data-trim>
+// relatively simple selector
+.horse mane {
+  color: brown;
+}
+
+// complex selector
+creature#unicorn.equine.unicorn mane {
+  color: black;
+}
+                </code></pre>
+            </div>
+          </div>
+          <p style="clear:both;" class="fragment">The client says hey, all horses and unicorns need white manes.</p>
+          <pre class="fragment"><code data-trim data-noescape>
+.equine mane {
+  color: white <span class="fragment">!important;</span> <span class="fragment">:(</span>
+}
+            </code></pre>
+          <aside class="notes">
+            <p>For example, you're working this website, and the client says, "Hey, all equine animals need white manes."</p>
+            <p>Will the .equine mane { } selector work if we place it after the other rules? Well, it will override the horse rule, but not the other one.</p>
+            <p>So in this case you'd be forced to use important, rewrite the old class, or write another equally strong selector to override everything.</p>
+            <p>This can lead to difficult-to-maintain CSS that just gets more and more bloated as time goes on.</p>
+            <p>That selector is big and clearly unnecessary, but it's actually deceptively easy to write something very similar to it with less and sass. Because you can nest selectors, you don't always have a lot of awareness for how many levels deep you are at any given time.</p>
+          </aside>
+        </section>
+        <section>
+          <h3>Inline styles</h3>
+            <pre><code data-trim>
+              <mane style="color: red;"></mane>
+            </code></pre>
+            <p>These can only be overwritten with !important</p>
+            <aside class="notes">
+              <p>Inline styles can be really tempting because they are so easy to add in. A single file gets changed and you're good to go!</p>
+              <p>The problem is that inline styles cannot easily be attributed to other items. So if you have 85 unicorns on your website, you would need to put inline styles on each one.</p>
+              <p>Inline styles can only be overwritten with !important, which is always a hassle but definitely doesn't play nice with responsive websites. It leads to !important hell in media queries.</p>
+            </aside>
+        </section>
+      </section>
+      <section>
+        <h2>So how do we fix it?</h2>
+      </section>
+      <section>
+        <h2>BEM to the rescue.</h2>
+        <p class="fragment"><strong>B</strong>lock</p>
+        <p class="fragment"><strong>E</strong>lement</p>
+        <p class="fragment"><strong>M</strong>odifier</p>
+        <aside class="notes">
+          <p>Block - a standalone entity that is meaningful on its own.<br/>
+            e.g. header, menu, form input<br/>
+            non-html: unicorn</p>
+          <p>Element - Parts of a block that have no standalone meaning. They are intrinsically tied to the block in which they reside.<br/>
+            e.g. menu item, list item<br/>
+            non-html: unicorn's horn, mane, coat</p>
+          <p>Modifier - Flags on blocks or elements. They change appearance or behavior.<br/>
+            e.g. disabled, checked, selected<br/>
+            non-html: old, pregnant, hungry</p>
+        </aside>
+      </section>
+      <section>
+        <h2>Why use BEM?</h2>
+        <ol>
+          <li>Modular</li>
+          <li>Reusable</li>
+          <li>Tied to structure</li>
+        </ol>
+        <aside class="notes">
+          <ol>
+            <li>Modular
+              <ul>
+                <li>you won't get problems from cascading because your blocks generally do not rely on other elements on the page.</li>
+                <li>It would fit in very nicely with atomic design principles (Blocks = molecules and so on)</li>
+              </ul>
+            </li>
+            <li>Reusable
+              <ul>
+                <li>you should run into less instances of repeated code because you can easily reuse the same styles in multiple places.</li>
+                <li>you can more easily move css from one project to another!</li>
+              </ul>
+            </li>
+            <li>Structure
+              <ul>
+                <li>with BEM naming, you can understand some things about the html code without even seeing the html code e.g. you will always know that menu__item is an item that lives inside a menu.</li>
+                <li>because of this, you are allowed greater confidence in making css changes. It's common to never delete CSS because you have no idea what items might be using that class and whether you are going to break some obscure part of your site. With BEM naming, you should be able to delete or rename CSS with higher levels of confidence.</li>
+              </ul>
+            </li>
+          </ol>
+        </aside>
       </section>
     </div>
   </div>
   <!--
-
-  Long selectors and use of !important can get you into trouble.
-    For example, you're working on a pet website and maybe there's some heavy selector: #cat.tabby.cat.pet .body .belly p.fur { color: white; }
-    Later on in your project, you need to change ALL pets to have black fur.
-      The easiest way to do it might be to say .pet .fur { color: black; }
-      ... but that won't work in this case. The other selector is too strong. The rest of the fur might be black, but on their belly it would still be white.
-      You might then choose to override it by saying .pet .fur { color: black !important; }
-    But then later... you need to work on another section of the site, and black fur won't work there, because the background is black.
-      The only way to override the above selector is to make another important selector and either make it more specific, or put it lower in the css file. Over time your css will become harder and harder to maintain.
-
-    This is also why inline styles are bad. Inline styles have extremely high specificity. They can only be overridden by !important tags.
-
-    So how do we fix the problem of overly-specific css? It's very easy to fall into the hole of having too many selectors, especially when using less or sass.
-    .wrapper {
-      .main {
-        .diagram {
-          .caption {
-            color: red;
-          }
-        }
-      }
-    }
-    turns into .wrapper .main .diagram .caption { color: red; }  = [[ 0, 4, 0 ]]
-    but really, you could probably also just do .diagram .caption { color: red; }  = [[ 0, 2, 0 ]]
-    or even .diagram-caption { color: red; } = [[ 0, 1, 0 ]]
-
-    Following the BEM methodology can help prevent you from being affected by these pitfalls.
-
-    Okay let's finally talk about BEM.
-    ===
-
-  So what is BEM?
-  Block - Element - Modifier
-
-  Block-
-  - a standalone entity that is meaningful on its own.
-    - e.g. header, container, menu, input
-
-  Element-
-  - Parts of a block that have no standalone meaning. They are intrinsically tied to the block in which they reside.
-    - e.g. menu item, list item
-
-  Modifier
-  - Flags on blocks or elements. They change appearance or behavior.
-    - e.g. disabled, checked, selected
-
-  Why use it?
-  - it's modular.
-    - you won't get problems from cascading because your blocks generally do not rely on other elements on the page.
-    - you can more easily move css from one project to another!
-  - reusable
-    - you should run into less instances of repeated code because you can easily reuse the same styles in multiple places.
-  - structure
-    - with BEM naming, you can understand some things about the html code without even seeing the html code e.g. you will always know that menu__item is an item that lives inside a menu.
-    - because of this, you are allowed greater confidence in making css changes. It's common to never delete CSS because you have no idea what items might be using that class and whether you are going to break some obscure part of your site. With BEM naming, you should be able to delete or rename CSS with higher levels of confidence.
-
 
     So how does it work?
     - Let's say you have an element that will be living on the homepage with links to news articles, videos, etc. Let's name it .news-showcase
