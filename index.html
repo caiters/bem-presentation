@@ -1,32 +1,99 @@
 <!doctype html>
 <html>
 <head>
+  <title>Introducing Modular CSS With BEM</title>
+  <link rel="stylesheet" href="/css/reveal.css" />
+  <link rel="stylesheet" href="/css/theme/night.css" />
+  <link rel="stylesheet" href="/css/rainbow.css" />
 </head>
 <body>
+  <div class="reveal">
+    <div class="slides">
+      <!-- Intro Slide -->
+      <section>
+        <h1>Introducing Modular CSS with BEM</h1>
+        <p>- Caitlin</p>
+      </section>
+      <!-- CSS Overview -->
+      <section>
+        <h2>Quick overview of CSS</h2>
+        <p class="fragment"><strong>C</strong>ascading <strong>S</strong>tyle <strong>S</strong>heets</p>
+        <aside class="notes">
+          <p>Stylesheets are used to style your website. The CSS tells the browser what to make things look like: whether something has black text or white, where to position it, etc.</p>
+        </aside>
+      </section>
+      <section>
+        <h2>The Cascade</h2>
+        <p>Two things in CSS help determine what an element looks like.</p>
+        <ol>
+          <li>Specificity</li>
+          <li>Where the style rule lives in the stylesheet file</li>
+        </ol>
+        <div>
+        <code>
+          <p>a { color: red; }</p>
+          <p>a { color: blue; }</p>
+          &lt;a href="#"&gt;This link will be blue&lt;/a&gt;
+        </code>
+      </div>
+        <aside class="notes">
+          <p>Cascading = how stylesheets work. When more than one stylesheet rule can apply to a particular element in the html, the cascade determines which style is going to win.</p>
+          <p>Specificity is a measurement of the strength of a particular style rule. More on that in a moment.</p>
+          <p>Position matters. Given two rules that have an equal specificity, the one further down the css file will override the one that is higher.</p>
+        </aside>
+      </section>
+      <section>
+        <h2>Specificity</h2>
+        <a href="https://stuffandnonsense.co.uk/archives/images/specificitywars-05v2.jpg" target="_blank"><img src="/images/specificitywars.jpg" style="max-width: 50%" /></a>
+        <p><small>Source: https://stuffandnonsense.co.uk/archives/images/specificitywars-05v2.jpg</small></p>
+        <aside class="notes">
+          <p>Element selectors are the weakest, followed by class selectors and then finally ID selectors.</p>
+          <p>IDs can be very difficult to override - it's generally a rule in the community to not use IDs for styling, as that can lead to css that is difficult to update and maintain.</p>
+          <p>Selectors that are combined are more and more powerful, as you can see in the chart.</p>
+        </aside>
+      </section>
+      <section>
+
+        <section>
+          <h2>Trouble in (CSS) Paradise</h2>
+        </section>
+
+        <section>
+          <h3>Long nested selectors</h3>
+          <pre>
+            <code data-trim>
+              #cat.tabby.cat.pet .body .belly p.fur { color: white; }
+            </code>
+          </pre>
+          <p>... but now we want all pets to have black fur all over.</p>
+          <pre class="fragment">
+            <code data-trim>
+              <p>.pet .fur { color: black; }</p>
+            </code>
+          </pre>
+          <aside class="notes">
+            <p>For example, you're working on a pet website and maybe there's some heavy selector.</p>
+            <p>Later on in your project, you need to change ALL pets to have black fur.</p>
+          </aside>
+        </section>
+        <section>
+          <h3>!important</h3>
+          <div>
+            <code>#cat.tabby.cat.pet .body .belly p.fur { color: white; }</code>
+          </div>
+        </section>
+          <!--<ul>
+            <li class="fragment">Long, nested selectors</li>
+            <li class="fragment">!important</li>
+            <li class="fragment">Inline styles, e.g.:<br/>
+              style="color: red;"
+            </li>
+          </ul>-->
+
+      </section>
+    </div>
+  </div>
   <!--
-
-  Topics to cover:
-
-  INTRODUCTION
-  ===
-
-  CSS = cascading style sheets
-  Stylesheets = style your website. the CSS tells the browser what to make things look like - whether something has black text or grey, where to position it, etc.
-  Cascading = how stylesheets work.
-
-    When more than one stylesheet rule can apply to a particular element in the html, the cascade determines which style is going to win.
-    Two things help determine what something is going to look like.
-      One is specificity (more on that in a second), which is a measurement of how specific the style rule is.
-      The other is where it lives in the sheet. Given two rules that have an equal specificity, the one further down the css file will override the one that is higher.
-
-      css specificity - https://stuffandnonsense.co.uk/archives/images/specificitywars-05v2.jpg
-
-    p { color: red; }
-    div { color: blue; }
-    p { color: green; }
-
-    <p>This text will be green.</p>
-
 
   Long selectors and use of !important can get you into trouble.
     For example, you're working on a pet website and maybe there's some heavy selector: #cat.tabby.cat.pet .body .belly p.fur { color: white; }
@@ -171,6 +238,16 @@
   REFERENCES:
   http://getbem.com/introduction/
   -->
+  <script src="/js/head.min.js"></script>
   <script src="/js/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      dependencies: [
+        { src: '/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+      ],
+      showNotes: true,
+      history: true
+    });
+  </script>
 </body>
 </html>
