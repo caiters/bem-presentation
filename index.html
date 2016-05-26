@@ -48,12 +48,12 @@
         <p><small>Source: https://stuffandnonsense.co.uk/archives/images/specificitywars-05v2.jpg</small></p>
         <aside class="notes">
           <p>Element selectors are the weakest, followed by class selectors and then finally ID selectors.</p>
+          <p>Storm troopers to sith to dark lords of the sith</p>
           <p>IDs can be very difficult to override - it's generally a rule in the community to not use IDs for styling, as that can lead to css that is difficult to update and maintain.</p>
           <p>Selectors that are combined are more and more powerful, as you can see in the chart.</p>
         </aside>
       </section>
       <section>
-
         <section>
           <h2>Trouble in (CSS) Paradise</h2>
         </section>
@@ -74,6 +74,7 @@
             ... and so on.
           </div>
           <aside class="notes">
+            <p>First explain the selector. Hair in the mane of the body of the unicorn that is also an equine #creature.</p>
             <p>It can be tempting to override a complex selector with !important. !important will override pretty much anything. The problem is a single !important may lead to others.</p>
             <ol>
               <li>There's a complex selector. Your boss says "Hey, animals all need red hair." So you just use !important. Nice and easy, done!</li>
@@ -124,6 +125,7 @@ creature#unicorn.equine.unicorn mane {
             <p>Will the .equine mane { } selector work if we place it after the other rules? Well, it will override the horse rule, but not the other one.</p>
             <p>So in this case you'd be forced to use important, rewrite the old class, or write another equally strong selector to override everything.</p>
             <p>This can lead to difficult-to-maintain CSS that just gets more and more bloated as time goes on.</p>
+            <p>This can also make your website really fragile. All that nesting means if your HTML changes, your CSS may not work anymore. e.g. if we removed the #creature id, or if we renamed the mane element.</p>
             <p>That selector is big and clearly unnecessary, but it's actually deceptively easy to write something very similar to it with less and sass. Because you can nest selectors, you don't always have a lot of awareness for how many levels deep you are at any given time.</p>
           </aside>
         </section>
@@ -144,7 +146,8 @@ creature#unicorn.equine.unicorn mane {
         <h2>So how do we fix it?</h2>
       </section>
       <section>
-        <h2>BEM to the rescue.</h2>
+        <h2>BEM to the rescue!</h2>
+        <p><small>(Also, just don't use inline CSS.)</small></p>
         <p class="fragment"><strong>B</strong>lock</p>
         <p class="fragment"><strong>E</strong>lement</p>
         <p class="fragment"><strong>M</strong>odifier</p>
@@ -165,7 +168,7 @@ creature#unicorn.equine.unicorn mane {
         <ol>
           <li>Modular</li>
           <li>Reusable</li>
-          <li>Tied to structure</li>
+          <li>Loosely tied to structure</li>
         </ol>
         <aside class="notes">
           <ol>
@@ -178,105 +181,118 @@ creature#unicorn.equine.unicorn mane {
             <li>Reusable
               <ul>
                 <li>you should run into less instances of repeated code because you can easily reuse the same styles in multiple places.</li>
-                <li>you can more easily move css from one project to another!</li>
+                <li>you can more easily move css from one project to another! In theory!</li>
               </ul>
             </li>
             <li>Structure
               <ul>
                 <li>with BEM naming, you can understand some things about the html code without even seeing the html code e.g. you will always know that menu__item is an item that lives inside a menu.</li>
+                <li>At the same time, you aren't generally using element selectors when using BEM. So that gives you the freedom to use different HTML elements as needed.</li>
                 <li>because of this, you are allowed greater confidence in making css changes. It's common to never delete CSS because you have no idea what items might be using that class and whether you are going to break some obscure part of your site. With BEM naming, you should be able to delete or rename CSS with higher levels of confidence.</li>
               </ul>
             </li>
           </ol>
         </aside>
       </section>
+      <section>
+        <h2>BEM with fake code</h2>
+        <div>
+          <div style="width: 48%; float:left;">
+            <p data-height="300" data-theme-id="dark" data-slug-hash="f00485bef2de29540e00d9ea6b666a9a" data-default-tab="html" data-user="WebAdvanced" data-embed-version="2" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/f00485bef2de29540e00d9ea6b666a9a/">BEM Presentation - HTML</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+            <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+          </div>
+          <div style="width: 48%; float:left;">
+            <p data-height="300" data-theme-id="dark" data-slug-hash="da8e57129847ba5460fdc004f69021bc" data-default-tab="css" data-user="WebAdvanced" data-embed-version="2" data-editable="true" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/da8e57129847ba5460fdc004f69021bc/">BEM Presentation - CSS</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+            <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+          </div>
+          <div style="clear:both;"></div>
+        </div>
+        <aside class="notes">
+          <p>In the HTML you can't at first really tell the difference without classes.</p>
+          <p>BLOCK: creature class="equine"</p>
+          <p>ELEMENT: mane class="equine__mane" (this would differentiate it from a lion's mane)</p>
+          <p>MODIFIER: creature class="equine equine--unicorn"</p>
+        </aside>
+      </section>
+      <section>
+        <h2>Naming</h2>
+        <h3>Blocks</h3>
+        <ul>
+        <li>Any combination of letters, digits, and dashes. e.g. "news-showcase"</li>
+        <li>No tag name (e.g. "div"), no IDs</li>
+        <li>No dependency on any other blocks or elements on the page.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Naming</h2>
+        <h3>Elements</h3>
+        <ul>
+        <li>Block name + two underscores + element name
+<pre><code data-trim>
+.news-showcase__item { }
+</code></pre>
+        </li>
+        <li>CSS should not have tag names (e.g. "div") or IDs</li>
+        <li>Class should have no dependency on any other blocks or elements on the page.</li>
+        </ul>
+        <pre><code data-trim>
+// correct
+.news-showcase__item { }
+
+// wrong
+.news-showcase .news-showcase__item { }
+          </code></pre>
+      </section>
+      <section>
+        <h2>Naming</h2>
+        <h3>Modifiers</h3>
+        <ul>
+        <li>Block or element name followed by two dashes, then modifier name.</li>
+<pre><code data-trim>
+.news-showcase__item--large { }
+</code></pre>
+        <li>Keep the original class - we are modifying the original.</li>
+<pre><code data-trim>
+<div class="news-showcase__item news-showcase__item--large"></div>
+</code></pre>
+        <li>A tiny amount of nesting is OK here.</li>
+<pre><code data-trim>
+.news-showcase__item--large .news-showcase__heading { } // headings inside large showcase item
+</code></pre>
+        </ul>
+      </section>
+      <section>
+        <h2>Naming</h2>
+        <h3>Other</h3>
+        <ul style="width:100%;">
+        <li>Executing javascript?
+<pre><code data-trim>
+//HTML
+<a href="#" class="btn js--magnific-popup">Watch Video</a>
+</code></pre>
+<pre><code data-trim>
+//JS
+$('.js-magnific-popup').magnificPopup();
+</code></pre>
+<pre><code data-trim>
+//No CSS!
+</code></pre>
+</li>
+        </ul>
+      </section>
+      <section>
+        <h2>General Rules</h2>
+        <ul>
+          <li>Stick to the naming convention</li>
+          <li>Don't nest stuff in LESS/SASS unless you need to</li>
+          <li>Don't use IDs, !important, or inline styles</li>
+          <li>Don't use DOM elements - your CSS requires a certain structure but should be element-agnostic. CSS shouldn't care if it is on a div or a p tag.</li>
+        </ul>
+      </section>
+
     </div>
   </div>
   <!--
-
-    So how does it work?
-    - Let's say you have an element that will be living on the homepage with links to news articles, videos, etc. Let's name it .news-showcase
-
-    <ul class="news-showcase">
-      ...
-    </ul>
-
-    Now let's add some showcase items.
-
-    <ul class="news-showcase">
-      <li>
-        ...
-      </li>
-      <li>
-        ...
-      </li>
-      <li>
-        ...
-      </li>
-    </ul>
-
-    We _could_ style this by just doing css like so:
-      .news-showcase li { }
-    ... but this assumes that it will always be an li, which is not necessarily the case. .news-showcase doesn't have to be a ul (unordered list).
-    ... this also has higher specificity. if we EVER want to override any of the styles, we will have to either repeat the full rule and have it lower on the page, or add more specificity.
-
-    So what would be better? Let's use BEM.
-    .news-showcase__item { }  // you can tell just by looking at this that it is a child of news-showcase. You don't even need to see the HTML to know that.
-
-    <ul class="news-showcase">
-      <li class="news-showcase__item">
-        ...
-      </li>
-      <li class="news-showcase__item">
-        ...
-      </li>
-      <li class="news-showcase__item">
-        ...
-      </li>
-    </ul>
-
-    Okay let's add some more. I'm going to reduce this to a single LI for simplicity.
-
-    <ul class="news-showcase">
-      <li class="news-showcase__item">
-        <h3>Lorem ipsum</h3>
-        <a href="#">Dolor Sit Amet</a>
-      </li>
-    </ul>
-
-    The old way you might have done:
-    .news-showcase h3, or possibly even .news-showcase li h3.
-    Why don't you want to do that? Well, what if later you want to reuse this element somewhere else, but h3 doesn't make sense anymore? What if it's an h2 instead?
-    Styling headings (h1, h2, h3, h4, h5, h6) can often bite you later because we just aren't consistent with how headings are displayed across a website. That isn't a bad thing, it's just a fact. Different sections may require different styles for the same level of heading.
-
-    So let's BEM this.
-    <ul class="news-showcase">
-      <li class="news-showcase__item">
-        <h3 class="news-showcase__heading">Lorem ipsum</h3>
-        <a href="#" class="btn">Dolor Sit Amet</a>
-      </li>
-    </ul>
-
-    Note that the heading is NOT news-showcase__item__heading. We still just consider it a child of news-showcase. It's pretty unlikely that we'd need to style the heading of news-showcase__item from news-showcase. This helps prevent BEM classes from getting way too long, and also keeps them reuseable.
-    Also notice that it is NOT news-showcase__btn. Button styles are often reuseable across a whole website, so it wouldn't make sense to specifically name this as a child of news-showcase. It's merely a button, a fully standalone "block" element, that happens to live inside news-showcase.
-      - Why isn't __heading the same? Again, headings are more difficult to blanket style across a whole site. The styles we're using for the heading are specific to this section and not likely to be reused elsewhere.
-
-    Okay, nearly done. What if we want this button to be special somehow? What if all the other buttons are transparent with a border around them, but we want this one to be a solid color?
-
-    <a href="#" class="btn btn--solid">Dolor Sit Amet</a>
-
-    .btn { border: 1px solid #000; color: #000; background: transparent; padding: 10px 20px; font-size: 18px; display: inline-block; }
-    .btn--solid { border: none; background: #fff; }
-
-    We can add a modifier class, btn--solid. It's still a .btn, but has a modifier of .btn--solid. It will inherit all of the styles of .btn, and then will override with any styles included in .btn--solid.
-    So it will override the border and background color, but will inherit the text color, padding, font size, and display attribute.
-
-
-    POTENTIAL PITFALLS
-    Modifiers are great - just make sure you aren't including things as the default style that don't need to be. For example, if you find yourself constantly overriding the border style on a button, maybe the border should not be a default. You could remove that from .btn and then have btn--has-border.
-    When naming new styles, try to think about what a block is. If the item you are styling can be standalone and doesn't rely on its container, don't name it like an element.
-
-
 
   REFERENCES:
   http://getbem.com/introduction/
@@ -286,7 +302,11 @@ creature#unicorn.equine.unicorn mane {
   <script>
     Reveal.initialize({
       dependencies: [
-        { src: '/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        {
+          src: 'plugin/live-coding.js', async: true, condition: function() { return !!document.body.classList; },
+          src: '/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); }
+
+        }
       ],
       showNotes: true,
       history: true
