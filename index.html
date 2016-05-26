@@ -12,9 +12,22 @@
       <!-- Intro Slide -->
       <section>
         <h1>Introducing Modular CSS with BEM</h1>
-        <p>- Caitlin</p>
+        <img style="background: transparent none; border: none; box-shadow: none; width: 150px" src="/images/unicorn.png" />
+      </section>
+      <section>
+        <h2>Contents of the Talk</h2>
+        <ul>
+          <li>Quick overview of CSS</li>
+          <li>Potential CSS Pitfalls</li>
+          <li>About BEM naming convention</li>
+          <li>Why use BEM?</li>
+          <li>How to use BEM</li>
+        </ul>
       </section>
       <!-- CSS Overview -->
+      <section>
+        <img src="/images/css.gif" />
+      </section>
       <section>
         <h2>Quick overview of CSS</h2>
         <p class="fragment"><strong>C</strong>ascading <strong>S</strong>tyle <strong>S</strong>heets</p>
@@ -30,12 +43,31 @@
           <li>Where the style rule lives in the stylesheet file</li>
         </ol>
         <div>
-        <code>
-          <p>a { color: red; }</p>
-          <p>a { color: blue; }</p>
-          &lt;a href="#"&gt;This link will be blue&lt;/a&gt;
-        </code>
+          <br/>
+          <div style="width: 48%; float: left;">
+            <p><small>Specificity</small></p>
+<pre><code data-trim>
+p a { color: red; }
+a { color: blue; }
+</code></pre>
+<pre><code data-trim>
+<p><a href="#">This link will be red</a></p>
+</code></pre>
+          </div>
+        <div style="width: 48%; float: left;">
+          <p><small>Order</small></p>
+<pre><code data-trim>
+a { color: red; }
+a { color: blue; }
+</code></pre>
+<pre><code data-trim>
+<a href="#">This link will be blue</a>
+</code></pre>
+
       </div>
+
+      <div style="clear:both;"></div>
+    </div>
         <aside class="notes">
           <p>Cascading = how stylesheets work. When more than one stylesheet rule can apply to a particular element in the html, the cascade determines which style is going to win.</p>
           <p>Specificity is a measurement of the strength of a particular style rule. More on that in a moment.</p>
@@ -84,7 +116,10 @@
           </aside>
         </section>
         <section>
-          <h3>Long nested selectors</h3>
+          <img src="/images/Strip-CSS-respect-650-finalenglish1.jpg" />
+        </section>
+        <section>
+          <h3>Long, complex selectors</h3>
 
           <div class="clearfix group">
             <div style="width: 60%; float: left; ">
@@ -127,6 +162,13 @@ creature#unicorn.equine.unicorn mane {
             <p>This can lead to difficult-to-maintain CSS that just gets more and more bloated as time goes on.</p>
             <p>This can also make your website really fragile. All that nesting means if your HTML changes, your CSS may not work anymore. e.g. if we removed the #creature id, or if we renamed the mane element.</p>
             <p>That selector is big and clearly unnecessary, but it's actually deceptively easy to write something very similar to it with less and sass. Because you can nest selectors, you don't always have a lot of awareness for how many levels deep you are at any given time.</p>
+          </aside>
+        </section>
+        <section>
+          <p data-height="265" data-theme-id="dark" data-slug-hash="f8e1585a0319d1925b8c425935336795" data-default-tab="html,result" data-user="WebAdvanced" data-embed-version="2" data-preview="true" data-editable="true" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/f8e1585a0319d1925b8c425935336795/">BEM - Holy Selectors Batman</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+          <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+          <aside class="notes">
+            <p>Let's pretend we want to remove the link from the logo. Now the layout breaks because that selector is fragile. :(</p>
           </aside>
         </section>
         <section>
@@ -195,32 +237,38 @@ creature#unicorn.equine.unicorn mane {
         </aside>
       </section>
       <section>
-        <h2>BEM with fake code</h2>
-        <div>
-          <div style="width: 48%; float:left;">
-            <p data-height="300" data-theme-id="dark" data-slug-hash="f00485bef2de29540e00d9ea6b666a9a" data-default-tab="html" data-user="WebAdvanced" data-embed-version="2" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/f00485bef2de29540e00d9ea6b666a9a/">BEM Presentation - HTML</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
-            <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
-          </div>
-          <div style="width: 48%; float:left;">
-            <p data-height="300" data-theme-id="dark" data-slug-hash="da8e57129847ba5460fdc004f69021bc" data-default-tab="css" data-user="WebAdvanced" data-embed-version="2" data-editable="true" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/da8e57129847ba5460fdc004f69021bc/">BEM Presentation - CSS</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
-            <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
-          </div>
-          <div style="clear:both;"></div>
-        </div>
-        <aside class="notes">
-          <p>In the HTML you can't at first really tell the difference without classes.</p>
-          <p>BLOCK: creature class="equine"</p>
-          <p>ELEMENT: mane class="equine__mane" (this would differentiate it from a lion's mane)</p>
-          <p>MODIFIER: creature class="equine equine--unicorn"</p>
-        </aside>
-      </section>
-      <section>
         <h2>Naming</h2>
         <h3>Blocks</h3>
         <ul>
-        <li>Any combination of letters, digits, and dashes. e.g. "news-showcase"</li>
-        <li>No tag name (e.g. "div"), no IDs</li>
-        <li>No dependency on any other blocks or elements on the page.</li>
+        <li>
+          Any combination of letters, digits, and dashes
+<pre><code data-trim>
+<div class="news-showcase"></div>
+<div class="news"></div>
+<div class="logo-2"></div>
+</code></pre>
+        </li>
+        <li>
+          No tag names, no IDs
+<pre><code data-trim>
+// wrong
+div.news-showcase { ... }
+#news.news-showcase { ... }
+
+// correct
+.news-showcase { ... }
+</code></pre>
+        </li>
+        <li>No dependency on any other blocks or elements on the page.
+<pre><code data-trim>
+// wrong
+.homepage .news-showcase { ... }
+
+// correct
+.news-showcase { ... }
+</code></pre>
+
+        </li>
         </ul>
       </section>
       <section>
@@ -232,33 +280,38 @@ creature#unicorn.equine.unicorn mane {
 .news-showcase__item { }
 </code></pre>
         </li>
-        <li>CSS should not have tag names (e.g. "div") or IDs</li>
+        <li>CSS should not have tag names (e.g. "div") or IDs
+<pre><code data-trim>
+// wrong
+div.news-showcase__item { }
+</code></pre>
+        </li>
         <li>Class should have no dependency on any other blocks or elements on the page.</li>
         </ul>
         <pre><code data-trim>
-// correct
-.news-showcase__item { }
-
 // wrong
 .news-showcase .news-showcase__item { }
+
+// correct
+.news-showcase__item { }
           </code></pre>
       </section>
       <section>
         <h2>Naming</h2>
         <h3>Modifiers</h3>
         <ul>
-        <li>Block or element name followed by two dashes, then modifier name.</li>
+        <li>Block or element name followed by two dashes, then modifier name.
 <pre><code data-trim>
 .news-showcase__item--large { }
-</code></pre>
-        <li>Keep the original class - we are modifying the original.</li>
+</code></pre></li>
+        <li>Keep the original class on the element
 <pre><code data-trim>
 <div class="news-showcase__item news-showcase__item--large"></div>
-</code></pre>
-        <li>A tiny amount of nesting is OK here.</li>
+</code></pre></li>
+        <li>Sometimes modifiers may be a dependency for other elements
 <pre><code data-trim>
 .news-showcase__item--large .news-showcase__heading { } // headings inside large showcase item
-</code></pre>
+</code></pre></li>
         </ul>
       </section>
       <section>
@@ -278,18 +331,85 @@ $('.js-magnific-popup').magnificPopup();
 //No CSS!
 </code></pre>
 </li>
+<li>IDs can also be used for this, but a class is nice for a reuseable component that has functionality (such as a rotator or modal popup).</li>
         </ul>
+      </section>
+      <section>
+        <h2>BEM with fake code</h2>
+        <div>
+          <div> <!--style="width: 48%; float:left;"-->
+            <p data-height="300" data-theme-id="dark" data-slug-hash="f00485bef2de29540e00d9ea6b666a9a" data-default-tab="html" data-user="WebAdvanced" data-embed-version="2" data-preview="true" data-editable="true" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/f00485bef2de29540e00d9ea6b666a9a/">BEM Presentation - HTML</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+            <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+          </div>
+          <!--<div style="width: 48%; float:left;">
+            <p data-height="300" data-theme-id="dark" data-slug-hash="da8e57129847ba5460fdc004f69021bc" data-default-tab="css" data-user="WebAdvanced" data-embed-version="2" data-preview="true" data-editable="true" class="codepen">See the Pen <a href="http://codepen.io/WebAdvanced/pen/da8e57129847ba5460fdc004f69021bc/">BEM Presentation - CSS</a> by WebAdvanced (<a href="http://codepen.io/WebAdvanced">@WebAdvanced</a>) on <a href="http://codepen.io">CodePen</a>.</p>
+            <script async src="//assets.codepen.io/assets/embed/ei.js"></script>
+          </div>-->
+          <div style="clear:both;"></div>
+        </div>
+        <aside class="notes">
+          <p>In the HTML you can't at first really tell the difference without classes.</p>
+          <p>BLOCK: creature class="equine"</p>
+          <p>ELEMENT: mane class="equine__mane" (this would differentiate it from a lion's mane)</p>
+          <p>MODIFIER: creature class="equine equine--unicorn"</p>
+        </aside>
+      </section>
+      <section>
+        <h2>SASS Tips</h2>
+        <p>You can group BEM blocks with their elements and modifiers into a tidy package using SASS or LESS.</p>
+        <div>
+          <div style="float:left; width: 48%">
+<pre><code data-trim>
+// The SCSS
+.news-showcase {
+  ...
+  &__item {
+    ...
+    &--large {
+      ...
+      .news-showcase__heading {
+        ...
+      }
+    }
+  }
+  &__heading {
+    ...
+  }
+}
+</code></pre>
+</div>
+<div style="float:left; width: 48%">
+<pre><code data-trim>
+// The Generated CSS
+.news-showcase { ... }
+.news-showcase__item { ... }
+.news-showcase__item--large { ... }
+.news-showcase__item--large .news-showcase__heading { ... }
+.news-showcase__heading { ... }
+</code></pre>
+</div>
+<div style="clear:both;"></div>
+</div>
       </section>
       <section>
         <h2>General Rules</h2>
         <ul>
           <li>Stick to the naming convention</li>
-          <li>Don't nest stuff in LESS/SASS unless you need to</li>
-          <li>Don't use IDs, !important, or inline styles</li>
-          <li>Don't use DOM elements - your CSS requires a certain structure but should be element-agnostic. CSS shouldn't care if it is on a div or a p tag.</li>
+          <li>When using SASS/LESS, only nest classes when necessary</li>
+          <li>Avoid IDs/!important in your CSS &amp; inline styles in your HTML</li>
+          <li>Keep your CSS markup-agnostic. CSS shouldn't care if it is on a &lt;div&gt; or a &lt;p&gt;</li>
         </ul>
+        <br/><br/>
+        <p style="margin-bottom: 0;"><small>Let's try to avoid this!</small></p>
+        <img src="/images/css-life.png" />
       </section>
-
+      <section>
+        <h2>Questions?</h2>
+        <figure>
+          <img src="/images/adjusting-css.gif" />
+          <figcaption><small>Fixing browser bugs</small></figcaption>
+        </figure>
+      </section>
     </div>
   </div>
   <!--
